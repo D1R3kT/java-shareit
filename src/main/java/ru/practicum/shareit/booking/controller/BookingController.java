@@ -34,8 +34,8 @@ public class BookingController {
     }
 
     @PostMapping
-    public BookingResponse create( @RequestHeader("X-Sharer-User-Id") Long userId,
-                                   @RequestBody BookingDto request) {
+    public BookingResponse create(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                  @RequestBody BookingDto request) {
         System.out.println(LocalDateTime.now());
         System.out.println(request.getStart());
         return bookingService.create(userId, request);

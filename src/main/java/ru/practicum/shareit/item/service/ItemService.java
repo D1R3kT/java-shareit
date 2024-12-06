@@ -14,7 +14,7 @@ public interface ItemService {
 
     ItemResponse create(ItemDto request, Long userId);
 
-    ItemResponse patch(Long id, Long UserId, ItemDto request);
+    ItemResponse patch(Long id, Long userId, ItemDto request);
 
     void delete(Long id, Long userId);
 
