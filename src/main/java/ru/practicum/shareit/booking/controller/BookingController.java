@@ -16,16 +16,17 @@ import java.util.List;
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 public class BookingController {
+    private static final String USER_ID = "X-Sharer-User-Id";
     private final BookingService bookingService;
 
     @GetMapping("/{id}")
     public BookingResponse getForUser(@PathVariable Long id,
-                                      @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                      @NotNull @Positive @RequestHeader(USER_ID) Long userId) {
         return bookingService.getForUser(id, userId);
     }
 
     @GetMapping
-    public List<BookingResponse> getAllForBooker(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long bookerId,
+    public List<BookingResponse> getAllForBooker(@NotNull @Positive @RequestHeader(USER_ID) Long bookerId,
                                                  @RequestParam(
                                                          value = "state",
                                                          required = false,
@@ -34,7 +35,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public BookingResponse create(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public BookingResponse create(@RequestHeader(USER_ID) Long userId,
                                   @RequestBody BookingDto request) {
         System.out.println(LocalDateTime.now());
         System.out.println(request.getStart());
@@ -43,7 +44,7 @@ public class BookingController {
 
     @PatchMapping("/{id}")
     public BookingResponse patch(@PathVariable Long id,
-                                 @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+                                 @NotNull @Positive @RequestHeader(USER_ID) Long userId,
                                  @RequestBody(required = false) BookingDto request,
                                  @RequestParam(value = "approved", required = false) Boolean isAccept) {
         if (isAccept != null) {
@@ -55,12 +56,12 @@ public class BookingController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id,
-                       @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+                       @NotNull @Positive @RequestHeader(USER_ID) Long userId) {
         bookingService.delete(id, userId);
     }
 
     @GetMapping("/owner")
-    public List<BookingResponse> getAllForOwner(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+    public List<BookingResponse> getAllForOwner(@NotNull @Positive @RequestHeader(USER_ID) Long userId,
                                                 @RequestParam(
                                                         value = "state",
                                                         required = false,

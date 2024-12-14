@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
 public class ItemRequestController {
-
+    private static final String USER_ID = "X-Sharer-User-Id";
     private final ItemRequestService itemRequestService;
 
     @GetMapping("/{id}")
@@ -27,17 +27,17 @@ public class ItemRequestController {
     }
 
     @PostMapping
-    public ItemRequestResponse create(@RequestHeader("X-Sharer-User-Id") Long userId, ItemRequestDto request) {
+    public ItemRequestResponse create(@RequestHeader(USER_ID) Long userId, ItemRequestDto request) {
         return itemRequestService.create(userId, request);
     }
 
     @PatchMapping
-    public ItemRequestResponse patch(@RequestHeader("X-Sharer-User-Id") Long userId, ItemRequestDto request) {
+    public ItemRequestResponse patch(@RequestHeader(USER_ID) Long userId, ItemRequestDto request) {
         return itemRequestService.patch(userId, request);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long id) {
+    public void delete(@RequestHeader(USER_ID) Long userId, @PathVariable Long id) {
         itemRequestService.delete(userId, id);
     }
 }

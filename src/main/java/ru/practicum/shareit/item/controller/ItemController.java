@@ -19,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
+    private static final String USER_ID = "X-Sharer-User-Id";
 
     @GetMapping("/{id}")
     public ItemResponse get(@PathVariable Long id) {
@@ -26,12 +27,12 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemResponse create(@RequestBody @Valid ItemDto request, @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ItemResponse create(@RequestBody @Valid ItemDto request, @RequestHeader(USER_ID) Long userId) {
         return itemService.create(request, userId);
     }
 
     @PatchMapping("/{id}")
-    public ItemResponse patch(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+    public ItemResponse patch(@NotNull @Positive @RequestHeader(USER_ID) Long userId,
                               @PathVariable Long id,
                               @RequestBody ItemDto request) {
         return itemService.patch(id, userId, request);
@@ -39,12 +40,12 @@ public class ItemController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id,
-                       @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+                       @NotNull @Positive @RequestHeader(USER_ID) Long userId) {
         itemService.delete(id, userId);
     }
 
     @GetMapping
-    public List<ItemResponse> getAllForUser(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemResponse> getAllForUser(@NotNull @Positive @RequestHeader(USER_ID) Long userId) {
         return itemService.getAllForUser(userId);
     }
 
@@ -58,7 +59,7 @@ public class ItemController {
 
     @PostMapping("/{id}/comment")
     public CommentResponse createComment(@Positive @PathVariable Long id,
-                                         @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long bookerId,
+                                         @NotNull @Positive @RequestHeader(USER_ID) Long bookerId,
                                          @Valid @RequestBody CommentDto request) {
         return itemService.createComment(id, bookerId, request);
     }
