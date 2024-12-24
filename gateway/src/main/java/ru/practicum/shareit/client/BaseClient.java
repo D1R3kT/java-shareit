@@ -2,7 +2,6 @@ package ru.practicum.shareit.client;
 
 import org.springframework.http.*;
 import org.springframework.lang.Nullable;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
@@ -85,7 +84,7 @@ public class BaseClient {
 
         ResponseEntity<Object> shareitServerResponse;
         try {
-            if (!CollectionUtils.isEmpty(parameters)) {
+            if (parameters != null && !parameters.isEmpty()) {
                 shareitServerResponse = rest.exchange(path, method, requestEntity, Object.class, parameters);
             } else {
                 shareitServerResponse = rest.exchange(path, method, requestEntity, Object.class);
