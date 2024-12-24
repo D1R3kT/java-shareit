@@ -38,6 +38,7 @@ public class ItemControllerTest {
     private final Long userId = 1L;
     private final ItemResponse itemResponse = ModelFactory.createItemResponse(itemId);
     private final CommentResponse commentResponse = ModelFactory.createCommentResponse(itemId);
+    public static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
 
     @Test
     void testGetItem() throws Exception {
@@ -59,7 +60,7 @@ public class ItemControllerTest {
     void testCreateItem() throws Exception {
         when(itemService.createItem(eq(userId), any(ItemDto.class))).thenReturn(itemResponse);
         mockMvc.perform(post("/items")
-                        .header("X-sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .content(mapper.writeValueAsString(itemResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -76,7 +77,7 @@ public class ItemControllerTest {
     void testPatchItem() throws Exception {
         when(itemService.patchItem(eq(userId), eq(itemId), any(ItemDto.class))).thenReturn(itemResponse);
         mockMvc.perform(patch("/items/" + itemId)
-                        .header("X-sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .content(mapper.writeValueAsString(itemResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -92,7 +93,7 @@ public class ItemControllerTest {
     @Test
     void testDeleteItem() throws Exception {
         mockMvc.perform(delete("/items/" + itemId)
-                        .header("X-sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -104,7 +105,7 @@ public class ItemControllerTest {
     void testGetItemsForUser() throws Exception {
         when(itemService.getItemsForUser(userId)).thenReturn(List.of(itemResponse));
         mockMvc.perform(get("/items")
-                        .header("X-sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .content(mapper.writeValueAsString(itemResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -130,7 +131,7 @@ public class ItemControllerTest {
     void testCreateComment() throws Exception {
         when(itemService.createComment(eq(itemId), eq(userId), any(CommentDto.class))).thenReturn(commentResponse);
         mockMvc.perform(post("/items/" + itemId + "/comment")
-                        .header("X-sharer-User-Id", userId)
+                        .header(X_SHARER_USER_ID, userId)
                         .content(mapper.writeValueAsString(commentResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
