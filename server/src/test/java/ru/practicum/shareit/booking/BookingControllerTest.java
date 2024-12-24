@@ -39,13 +39,13 @@ public class BookingControllerTest {
     private final Long userId = 1L;
     private final Long bookingId = 1L;
     private final BookingResponse bookingResponse = ModelFactory.createBookingResponse(bookingId);
-    public static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+
 
     @Test
     void testGetBookingForUser() throws Exception {
         when(bookingService.getBookingForUser(bookingId, userId)).thenReturn(bookingResponse);
         mockMvc.perform(get("/bookings/" + bookingId)
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .content(mapper.writeValueAsString(bookingResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -64,7 +64,7 @@ public class BookingControllerTest {
     void testCreateBooking() throws Exception {
         when(bookingService.createBooking(eq(userId), any(BookingDto.class))).thenReturn(bookingResponse);
         mockMvc.perform(post("/bookings")
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .content(mapper.writeValueAsString(bookingResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -83,7 +83,7 @@ public class BookingControllerTest {
     void testPatchBooking() throws Exception {
         when(bookingService.patchBooking(eq(bookingId), eq(userId), any(BookingDto.class))).thenReturn(bookingResponse);
         mockMvc.perform(patch("/bookings/" + bookingId)
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .content(mapper.writeValueAsString(bookingResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -102,7 +102,7 @@ public class BookingControllerTest {
     void testPatchBookingForAccept() throws Exception {
         when(bookingService.patchBooking(eq(bookingId), eq(userId), any(BookingDto.class))).thenReturn(bookingResponse);
         mockMvc.perform(patch("/bookings/" + bookingId)
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .param("approved", "true"))
                 .andExpect(status().isOk());
         verify(bookingService, times(1)).acceptBooking(eq(bookingId), eq(userId), eq(true));
@@ -111,7 +111,7 @@ public class BookingControllerTest {
     @Test
     void testDeleteBooking() throws Exception {
         mockMvc.perform(delete("/bookings/" + bookingId)
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -123,7 +123,7 @@ public class BookingControllerTest {
     void testGetBookingsForOwner() throws Exception {
         when(bookingService.getBookingsForOwner(eq(userId), eq(BookingState.ALL))).thenReturn(List.of(bookingResponse));
         mockMvc.perform(get("/bookings/owner")
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .param("state", "ALL")
                         .content(mapper.writeValueAsString(bookingResponse))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -137,7 +137,7 @@ public class BookingControllerTest {
     void testGetBookings() throws Exception {
         when(bookingService.getBookings(eq(userId), eq(BookingState.ALL), eq(0), eq(10))).thenReturn(List.of(bookingResponse));
         mockMvc.perform(get("/bookings")
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .param("state", "ALL")
                         .param("from", "0")
                         .param("size", "10")

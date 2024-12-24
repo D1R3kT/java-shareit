@@ -37,7 +37,7 @@ public class ItemRequestControllerTest {
     private final Long userId = 1L;
     private final ItemRequestResponse itemRequestResponse = ModelFactory.createItemRequestResponse(itemRequestId);
     private final ItemRequestWithItems itemRequestWithItems = ModelFactory.createItemRequestWithItems(itemRequestId);
-    public static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+
 
     @Test
     void testGetItemRequest() throws Exception {
@@ -62,7 +62,7 @@ public class ItemRequestControllerTest {
         when(itemRequestService.getItemRequestForRequestor(itemRequestId)).thenReturn(List.of(itemRequestWithItems));
 
         mockMvc.perform(get("/requests")
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .param("state", "ALL")
                         .content(mapper.writeValueAsString(itemRequestWithItems))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +78,7 @@ public class ItemRequestControllerTest {
         when(itemRequestService.createItemRequest(eq(userId), any(ItemRequestDto.class))).thenReturn(itemRequestResponse);
 
         mockMvc.perform(post("/requests")
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .content(mapper.writeValueAsString(itemRequestResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -96,7 +96,7 @@ public class ItemRequestControllerTest {
         when(itemRequestService.patchItemRequest(eq(itemRequestId), eq(userId), any(ItemRequestDto.class))).thenReturn(itemRequestResponse);
 
         mockMvc.perform(patch("/requests/" + itemRequestId)
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .content(mapper.writeValueAsString(itemRequestResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -112,7 +112,7 @@ public class ItemRequestControllerTest {
     @Test
     void testDeleteItemRequest() throws Exception {
         mockMvc.perform(delete("/requests/" + itemRequestId)
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -125,7 +125,7 @@ public class ItemRequestControllerTest {
         when(itemRequestService.getItemRequestForOther(userId)).thenReturn(List.of(itemRequestResponse));
 
         mockMvc.perform(get("/requests/all")
-                        .header(X_SHARER_USER_ID, userId)
+                        .header("X-sharer-User-Id", userId)
                         .content(mapper.writeValueAsString(itemRequestResponse))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
