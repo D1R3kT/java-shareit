@@ -17,16 +17,18 @@ import java.util.List;
 public class BookingController {
     private final BookingService bookingService;
 
+    public static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+
     @GetMapping("/{bookingId}")
     public BookingResponse getBookingForUser(@PathVariable Long bookingId,
-                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                             @RequestHeader(X_SHARER_USER_ID) Long userId) {
         log.info("Server received: Get booking with id={} for user with id={}", bookingId, userId);
         return bookingService.getBookingForUser(bookingId, userId);
     }
 
     @GetMapping
     public List<BookingResponse> getBookings(
-            @RequestHeader("X-Sharer-User-Id") long userId,
+            @RequestHeader(X_SHARER_USER_ID) long userId,
             @RequestParam(name = "state", defaultValue = "all") String stateParam,
             @RequestParam(name = "from", defaultValue = "0") Integer from,
             @RequestParam(name = "size", defaultValue = "10") Integer size) {
@@ -36,7 +38,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public BookingResponse createBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public BookingResponse createBooking(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                          @RequestBody BookingDto request) {
         log.info("Server received: Create booking={} by user with id={}", request, userId);
         return bookingService.createBooking(userId, request);
@@ -44,7 +46,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingResponse patchBooking(@PathVariable Long bookingId,
-                                        @RequestHeader("X-Sharer-User-Id") Long userId,
+                                        @RequestHeader(X_SHARER_USER_ID) Long userId,
                                         @RequestBody(required = false) BookingDto request,
                                         @RequestParam(value = "approved", required = false) Boolean isAccept) {
         if (isAccept != null) {
@@ -58,13 +60,13 @@ public class BookingController {
 
     @DeleteMapping("/{bookingId}")
     public void deleteBooking(@PathVariable Long bookingId,
-                              @RequestHeader("X-Sharer-User-Id") Long userId) {
+                              @RequestHeader(X_SHARER_USER_ID) Long userId) {
         log.info("Server received: Delete booking with id={} by user with id={}", bookingId, userId);
         bookingService.deleteBooking(bookingId, userId);
     }
 
     @GetMapping("/owner")
-    public List<BookingResponse> getBookingsForOwner(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public List<BookingResponse> getBookingsForOwner(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                                      @RequestParam(name = "state", defaultValue = "all") String stateParam) {
         log.info("Server received: Get booking with state={} for user with id={}", stateParam, userId);
         BookingState state = BookingState.from(stateParam);

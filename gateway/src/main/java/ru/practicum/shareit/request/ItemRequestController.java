@@ -19,6 +19,8 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 public class ItemRequestController {
     private final ItemRequestClient itemRequestClient;
 
+    public static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+
     @GetMapping("/{itemRequestId}")
     public ResponseEntity<Object> getItemRequest(@PathVariable Long itemRequestId) {
         log.info("Gate received: Get itemRequest for id {}", itemRequestId);
@@ -26,34 +28,34 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getItemRequestForRequestor(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<Object> getItemRequestForRequestor(@NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId) {
         log.info("Gate received: Get itemRequests for requestor {}", userId);
         return itemRequestClient.getItemRequestForRequestor(userId);
     }
 
     @PostMapping
-    public ResponseEntity<Object> createItemRequest(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> createItemRequest(@NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId,
                                                     @Valid @RequestBody ItemRequestDto request) {
         log.info("Gate received: Create itemRequest {} by user with id {}", request, userId);
         return itemRequestClient.createItemRequest(userId, request);
     }
 
     @PatchMapping
-    public ResponseEntity<Object> patchItemRequest(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> patchItemRequest(@NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId,
                                                    @Valid @RequestBody ItemRequestDto request) {
         log.info("Gate received: Patch itemRequest {} by user with id {}", request, userId);
         return itemRequestClient.patchItemRequest(userId, request);
     }
 
     @DeleteMapping("/{itemRequestId}")
-    public ResponseEntity<Object> deleteItemRequest(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> deleteItemRequest(@NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId,
                                                     @PathVariable Long itemRequestId) {
         log.info("Gate received: Delete itemRequest {} by user with id {}", itemRequestId, userId);
         return itemRequestClient.deleteItemRequest(userId, itemRequestId);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getItemRequestForOther(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<Object> getItemRequestForOther(@NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId) {
         log.info("Gate received: Get all other user's itemRequests for user with id {}", userId);
         return itemRequestClient.getItemRequestForOther(userId);
     }

@@ -18,6 +18,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 public class ItemController {
     private final ItemClient itemClient;
 
+    public static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItem(@PathVariable Long itemId) {
         log.info("Gateway received: Get item with id={}", itemId);
@@ -25,20 +27,20 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getItemsForUser(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<Object> getItemsForUser(@NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId) {
         log.info("Gateway received: Get items for user with id={}", userId);
         return itemClient.getItemsForUser(userId);
     }
 
     @PostMapping
-    public ResponseEntity<Object> createItem(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> createItem(@NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId,
                                              @Valid @RequestBody ItemDto request) {
         log.info("Gateway received: Create item={} by user with id={}", request, userId);
         return itemClient.createItem(userId, request);
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<Object> patchItem(@NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> patchItem(@NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId,
                                             @PathVariable Long itemId,
                                             @RequestBody ItemDto request) {
         log.info("Gateway received: Patch item ={} with id={} by user with id={}", request, itemId, userId);
@@ -47,7 +49,7 @@ public class ItemController {
 
     @DeleteMapping("/{itemId}")
     public ResponseEntity<Object> deleteItem(@PathVariable Long itemId,
-                                             @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                             @NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId) {
         log.info("Gateway received: Delete item with id={} by user with id={}", itemId, userId);
         return itemClient.deleteItem(itemId, userId);
     }
@@ -62,7 +64,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createComment(@Positive @PathVariable Long itemId,
-                                                @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long bookerId,
+                                                @NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long bookerId,
                                                 @Valid @RequestBody CommentDto request) {
         log.info("Gateway received: Create comment={} for item with id={} by user with id={}", request, itemId, bookerId);
         return itemClient.createComment(itemId, bookerId, request);

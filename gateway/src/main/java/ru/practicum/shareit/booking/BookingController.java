@@ -23,8 +23,10 @@ import ru.practicum.shareit.exception.DateTimeValueInvalid;
 public class BookingController {
     private final BookingClient bookingClient;
 
+    public static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
+
     @GetMapping("/{bookingId}")
-    public ResponseEntity<Object> getBookingForUser(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> getBookingForUser(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                                     @PathVariable Long bookingId) {
         log.info("Gateway received: Get booking with id={} for user with id={}", bookingId, userId);
         return bookingClient.getBookingForUser(userId, bookingId);
@@ -32,7 +34,7 @@ public class BookingController {
 
     @GetMapping
     public ResponseEntity<Object> getBookings(
-            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @RequestHeader(X_SHARER_USER_ID) Long userId,
             @RequestParam(name = "state", defaultValue = "all") String stateParam,
             @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
             @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
@@ -43,7 +45,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<Object> bookItem(@RequestHeader(X_SHARER_USER_ID) long userId,
                                            @RequestBody @Valid BookingDto request) {
         log.info("Gateway received: Create booking={} by user with id={}", request, userId);
         if (!request.getStart().isBefore(request.getEnd())) {
@@ -54,7 +56,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> patchBooking(@PathVariable Long bookingId,
-                                               @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+                                               @NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId,
                                                @RequestBody(required = false) BookingDto request,
                                                @RequestParam(value = "approved", required = false) Boolean isAccept) {
         if (isAccept != null) {
@@ -68,14 +70,14 @@ public class BookingController {
 
     @DeleteMapping("/{bookingId}")
     public ResponseEntity<Object> deleteBooking(@PathVariable Long bookingId,
-                                                @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                @NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId) {
         log.info("Gateway received: Delete booking with id={} by user with id={}", bookingId, userId);
         return bookingClient.deleteBooking(bookingId, userId);
     }
 
     @GetMapping("/owner")
     public ResponseEntity<Object> getBookingsForOwner(
-            @NotNull @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+            @NotNull @Positive @RequestHeader(X_SHARER_USER_ID) Long userId,
             @RequestParam(name = "state", defaultValue = "all") String stateParam) {
         log.info("Gateway received: Get booking with state={} for user with id={}", stateParam, userId);
         BookingState state = BookingState.from(stateParam)
